@@ -1,7 +1,7 @@
 from Video import Video
 
-print(Video.GetDownloadUrl("https://www.xvideos.com/video8706329/acariciando_resbaladizo_con_wiley"));
+print(Video.GetDownloadUrl(""));
 
 
-for video in Video.GetVideos("https://www.xvideos.com/?k=young&typef=gay"):
+for video in Video.GetVideos(""):
     print(video.ToMessage()+"\n");
