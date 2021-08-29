@@ -54,7 +54,5 @@ class TelegramClient:
         stream.close();
 
     def SendAnimation(self,pathAnimation,desc=""):
-        stream=open(pathAnimation,"rb");
-        self.Bot.sendVideo(self.ChatId,stream,caption=desc);
-        stream.close();
+        self.SendVideo(pathAnimation,desc);
     
