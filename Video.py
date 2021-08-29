@@ -30,11 +30,20 @@ class Video:
     def GetDownloadUrl(urlVideo):
         scraper = cloudscraper.create_scraper();
         page = scraper.get(urlVideo).text;
+        obj = lambda: None;
+
         campos=page.split("html5player.setVideoUrlHigh('")[1].split("');");
         urlDownload= campos[0];
         campos=page.split("html5player.setThumbUrl('")[1].split("');");
         imgVideo=campos[0];
-        obj = lambda: None;
+        campos=page.split("html5player.setThumbSlideBig('")[1].split("');");
+        imgSlideBig=campos[0];
+        campos=page.split("html5player.setVideoTitle('")[1].split("');");
+        title=campos[0];
+
         obj.Url=urlDownload;
         obj.Img=imgVideo;
+        obj.BigSlide=imgSlideBig;
+        obj.Title=title;
+
         return obj;

@@ -18,5 +18,5 @@ elif len(sys.argv)>1:
     fConfig.writelines([token,urlBase]);
     fConfig.close();
 
-print("Iniciando Bot V1.0");
+print("Iniciando Bot V2.0");
 VideoBot(token, urlBase).Start().run_forever();

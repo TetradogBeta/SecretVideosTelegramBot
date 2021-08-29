@@ -1,6 +1,9 @@
 from TelegramBot import TelegramBot
 from TelegramClient import TelegramClient
+from GifBuilder import GifBuilder
 from Video import Video
+
+import os
 
 class VideoBot:
 
@@ -15,7 +18,9 @@ class VideoBot:
     def _DoIt(self,telegramClient):
         if telegramClient.IsAnUrl:
             result=Video.GetDownloadUrl(telegramClient.MessageUrl);
-            telegramClient.SendPhoto(result.Img,result.Url);
+            gifFile=GifBuilder(result).GetGif(result.Title.replace(" ","_"));
+            telegramClient.SendAnimation(gifFile.Path,result.Url);
+            os.remove(gifFile.Path);
         else:
             url=self.UrlBase+"&k="+telegramClient.MessageText;
             for video in Video.GetVideos(url):

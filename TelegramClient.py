@@ -1,5 +1,9 @@
+import moviepy.editor as mp
+
 import telepot
 import urllib.parse
+import os
+
 
 class TelegramClient:
     def __init__(self,bot,msg):
@@ -45,3 +49,18 @@ class TelegramClient:
 
     def SendText(self,text):
         self.Bot.sendMessage(self.ChatId,text);
+    
+    def SendVideo(self,pathVideo,desc=""):
+        stream=open(pathVideo,"rb");
+        self.Bot.sendVideo(self.ChatId,stream,caption=desc);
+        stream.close();
+
+    def SendAnimation(self,pathAnimation,desc=""):
+        #lo convierto a mp4 y lo envio como video :)
+        mp4Path=pathAnimation.split(".")[0]+".mp4";
+        clip = mp.VideoFileClip(pathAnimation);
+        clip.write_videofile(mp4Path);
+        clip.close();
+        self.SendVideo(mp4Path,desc);
+        os.remove(mp4Path);
+    
