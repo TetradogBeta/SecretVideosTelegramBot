@@ -5,21 +5,29 @@ import io
 
 class GifBuilder:
 
-    def __init__(self,objVideo):
-        fd = urllib.request.urlopen(objVideo.BigSlide);
-        image_file = io.BytesIO(fd.read());
-        self.Img= Image.open(image_file);#hay 10x10 imgs
+    def __init__(self,objVideo,columnas=10,filas=10):#hay 10x10 imgs
+
+        if isinstance(objVideo, bytearray):
+            image_file = io.BytesIO(objVideo); 
+        elif isinstance(objVideo, str):
+            fd = urllib.request.urlopen(str(objVideo));
+            image_file = io.BytesIO(fd.read());  
+        else:
+            fd = urllib.request.urlopen(objVideo.BigSlide);
+            image_file = io.BytesIO(fd.read());
+
+        self.Img= Image.open(image_file); 
         self.Fotogramas=None;
+        self.Columnas=columnas;
+        self.Filas=filas;
 
     def GetImgs(self):
-        columnas=10;
-        filas=10;
         if self.Fotogramas is None:
-            width=self.Img.size[0]/columnas;
-            height=self.Img.size[1]/filas;
+            width=self.Img.size[0]/int(self.Columnas);
+            height=self.Img.size[1]/int(self.Filas);
 
-            for y in range(filas):
-                for x in range(columnas):
+            for y in range(self.Filas):
+                for x in range(self.Columnas):
                     caja = (x*width, y*height, (x*width) + width, (y*height) + height);
                     yield self.Img.crop(caja);
         else:
