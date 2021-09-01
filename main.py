@@ -32,22 +32,29 @@ def Main():
     commands=["Start","Download","MejorFoto","MejorGif","Nombre"];
     bot=Bot(token,urlBase+" Videos V4.0");
 
-    bot.AddCommand(commands[0], lambda cli:cli.SendText("1-Texto a buscar\n2-/"+commands[1]+" url (from "+urlBase+") si acaba en pagina x donde x es el numero de la pagina a continuar la busqueda\n3-"+commands[2]+" para enviar más rápido el link enviando una foto\n4-"+commands[3]+" para enviar un gif del slide del video\n5- para poderte dicir que no hay mensajes de una forma más personal xD\nTodos los comandos se guardan en la RAM así que no hay rastro si se reinicia el servidor por lo tanto puede ser que se tenga que configurar de vez en cuando."));
+    bot.AddCommand(commands[0], lambda cli,args:cli.SendText("1-Texto a buscar\n2-/"+commands[1]+" url (from "+urlBase+") si acaba en pagina x donde x es el numero de la pagina a continuar la busqueda\n3-/"+commands[2]+" para enviar más rápido el link enviando una foto\n4-/"+commands[3]+" para enviar un gif del slide del video\n5-/"+commands[4]+" para poderte dicir que no hay mensajes de una forma más personal xD\nTodos los comandos se guardan en la RAM así que no hay rastro si se reinicia el servidor por lo tanto puede ser que se tenga que configurar de vez en cuando."));
 
     dicMetodo=DicMetodo();
     dicMetodo.AddStarts(urlBase,SendVideo);
     bot.AddCommandPlus(commands[1], dicMetodo);
 
-    bot.AddCommand(commands[2], lambda cli:SetSettings(cli,dicLinkSettings,False));
-    bot.AddCommand(commands[3], lambda cli:SetSettings(cli,dicLinkSettings,True));
-    bot.AddCommand(commands[4], lambda cli:SetName(cli,dicNombres));
+    bot.AddCommand(commands[2], lambda cli,args:SetSettings(cli,dicLinkSettings,False));
+    bot.AddCommand(commands[3], lambda cli,args:SetSettings(cli,dicLinkSettings,True));
+    bot.AddCommand(commands[4], lambda cli,args:SetName(cli,dicNombres));
 
     bot.Default.AddStarts(urlBase,lambda cli: SendUrlVideo(cli,dicLinkSettings,urlBase));
     bot.Default.AddStarts("http", lambda cli:cli.SendText("solo links de "+urlBase));
     bot.Default.AddContains(urlBase,lambda cli:LimpiaUrlYEnvia(cli,dicLinkSettings));
     bot.Default.Default=lambda cli:BuscaEnLaWeb(cli,urlBase+filtro,dicNombres);
-
+    bot.ReplyTractament=ReplyTractament;
     bot.Start();
+
+def ReplyTractament(cli):
+    if cli.IsAReplyFromBot:
+        cli.Args=cli.Reply.split("\n");
+        if len(cli.Args)>0 and cli.Args[0].startswith("/"):
+            cli.Command=str(cli.Args[0][1:]).lower();
+            cli.Args=cli.Args[1:];
 
 def LimpiaUrlYEnvia(cli,dicLinkSettings):
     text=" ".join(cli.Args);
